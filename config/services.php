@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'easypost' => [
+        'api_key' => env('EASYPOST_API_KEY'),
+        'test_mode' => env('EASYPOST_TEST_MODE', true),
+    ],
+
 ];
