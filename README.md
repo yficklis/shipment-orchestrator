@@ -189,43 +189,43 @@ make logs          # View logs
 
 ```
 app/
-??? Http/
-?   ??? Controllers/
-?   ?   ??? ShipmentController.php         # Main CRUD controller
-?   ??? Middleware/
-?   ?   ??? EnsureShipmentOwner.php        # Authorization middleware
-?   ??? Requests/
-?   ?   ??? CreateShipmentRequest.php      # Validation rules
-?   ?   ??? UpdateShipmentRequest.php
-?   ??? Resources/
-?       ??? ShipmentResource.php            # API response formatting
-??? Models/
-?   ??? Shipment.php                        # Shipment model
-?   ??? User.php                            # User model
-??? Repositories/
-?   ??? Contracts/
-?   ?   ??? ShipmentRepositoryInterface.php
-?   ??? EloquentShipmentRepository.php      # Implementation
-??? Services/
-    ??? EasyPostService.php                 # EasyPost API integration
-    ??? AddressValidationService.php        # Address validation logic
+├── Http/
+│   ├── Controllers/
+│   │   └── ShipmentController.php         # Main CRUD controller
+│   ├── Middleware/
+│   │   └── EnsureShipmentOwner.php        # Authorization middleware
+│   ├── Requests/
+│   │   ├── CreateShipmentRequest.php      # Validation rules
+│   │   └── UpdateShipmentRequest.php
+│   └── Resources/
+│       └── ShipmentResource.php            # API response formatting
+├── Models/
+│   ├── Shipment.php                        # Shipment model
+│   └── User.php                            # User model
+├── Repositories/
+│   ├── Contracts/
+│   │   └── ShipmentRepositoryInterface.php
+│   └── EloquentShipmentRepository.php      # Implementation
+└── Services/
+    ├── EasyPostService.php                 # EasyPost API integration
+    └── AddressValidationService.php        # Address validation logic
 ```
 
 ### Frontend Structure 
 
 ```
 resources/js/
-??? Components/
-?   ??? Shipments/
-?       ??? AddressForm.vue                 # Reusable address input
-?       ??? PackageForm.vue                 # Package details input
-?       ??? LabelPreview.vue                # Label display
-?       ??? ShipmentCard.vue                # List item component
-??? Pages/
-    ??? Shipments/
-        ??? Index.vue                       # Shipments list
-        ??? Create.vue                      # Creation form
-        ??? Show.vue                        # Shipment details
+├── Components/
+│   └── Shipments/
+│       ├── AddressForm.vue                 # Reusable address input
+│       ├── PackageForm.vue                 # Package details input
+│       ├── LabelPreview.vue                # Label display
+│       └── ShipmentCard.vue                # List item component
+└── Pages/
+    └── Shipments/
+        ├── Index.vue                       # Shipments list
+        ├── Create.vue                      # Creation form
+        └── Show.vue                        # Shipment details
 ```
 
 ### Design Patterns
