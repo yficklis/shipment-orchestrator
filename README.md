@@ -211,7 +211,7 @@ app/
     ??? AddressValidationService.php        # Address validation logic
 ```
 
-### Frontend Structure
+### Frontend Structure 
 
 ```
 resources/js/
