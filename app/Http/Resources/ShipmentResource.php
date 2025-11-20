@@ -19,7 +19,7 @@ class ShipmentResource extends JsonResource
             'tracking_code' => $this->tracking_code,
             'carrier' => $this->carrier,
             'status' => $this->status,
-            
+
             // From address
             'from_address' => [
                 'name' => $this->from_name,
@@ -33,7 +33,7 @@ class ShipmentResource extends JsonResource
                 'email' => $this->from_email,
                 'formatted' => $this->from_address,
             ],
-            
+
             // To address
             'to_address' => [
                 'name' => $this->to_name,
@@ -47,7 +47,7 @@ class ShipmentResource extends JsonResource
                 'email' => $this->to_email,
                 'formatted' => $this->to_address,
             ],
-            
+
             // Package details
             'package' => [
                 'weight' => (float) $this->weight,
@@ -55,21 +55,21 @@ class ShipmentResource extends JsonResource
                 'width' => (float) $this->width,
                 'height' => (float) $this->height,
             ],
-            
+
             // Label information
             'label' => [
                 'url' => $this->label_url,
                 'tracking_url' => $this->tracking_url,
                 'postage_label_url' => $this->postage_label_url,
             ],
-            
+
             // Rate information
             'rate_amount' => $this->rate_amount ? (float) $this->rate_amount : null,
-            
+
             // Timestamps
             'created_at' => $this->created_at?->toISOString(),
             'updated_at' => $this->updated_at?->toISOString(),
-            
+
             // Status helpers
             'is_purchased' => $this->isPurchased(),
             'is_voided' => $this->isVoided(),

@@ -23,7 +23,7 @@ class ShipmentRepositoryTest extends TestCase
     public function test_can_create_shipment(): void
     {
         $user = User::factory()->create();
-        
+
         $data = [
             'user_id' => $user->id,
             'carrier' => 'USPS',
@@ -110,12 +110,12 @@ class ShipmentRepositoryTest extends TestCase
     public function test_can_get_shipments_by_status(): void
     {
         $user = User::factory()->create();
-        
+
         Shipment::factory()->count(2)->create([
             'user_id' => $user->id,
             'status' => 'purchased',
         ]);
-        
+
         Shipment::factory()->create([
             'user_id' => $user->id,
             'status' => 'voided',
@@ -137,4 +137,3 @@ class ShipmentRepositoryTest extends TestCase
         $this->assertCount(5, $recent);
     }
 }
-

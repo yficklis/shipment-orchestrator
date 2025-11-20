@@ -132,7 +132,7 @@ class EasyPostService
             ];
         } catch (\Exception $e) {
             Log::error('Address Validation Error: ' . $e->getMessage());
-            
+
             return [
                 'success' => false,
                 'valid' => false,
@@ -191,4 +191,3 @@ class EasyPostService
         }
     }
 }
-

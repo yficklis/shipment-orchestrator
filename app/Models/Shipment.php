@@ -53,7 +53,8 @@ use OpenApi\Attributes as OA;
 )]
 class Shipment extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -152,13 +153,13 @@ class Shipment extends Model
     public function getFromAddressAttribute(): string
     {
         $address = "{$this->from_street1}";
-        
+
         if ($this->from_street2) {
             $address .= ", {$this->from_street2}";
         }
-        
+
         $address .= ", {$this->from_city}, {$this->from_state} {$this->from_zip}";
-        
+
         return $address;
     }
 
@@ -168,13 +169,13 @@ class Shipment extends Model
     public function getToAddressAttribute(): string
     {
         $address = "{$this->to_street1}";
-        
+
         if ($this->to_street2) {
             $address .= ", {$this->to_street2}";
         }
-        
+
         $address .= ", {$this->to_city}, {$this->to_state} {$this->to_zip}";
-        
+
         return $address;
     }
 

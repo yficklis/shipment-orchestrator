@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "title": "Shipment Orchestrator API",
-        "description": "API for managing USPS shipping labels via EasyPost",
+        "description": "REST API for managing USPS shipping labels via EasyPost",
         "version": "1.0.0"
     },
     "servers": [
@@ -12,14 +12,14 @@
         }
     ],
     "paths": {
-        "/shipments": {
+        "/api/shipments": {
             "get": {
                 "tags": [
                     "Shipments"
                 ],
                 "summary": "List user's shipments",
                 "description": "Display a listing of the user's shipments.",
-                "operationId": "770f834dedbd56710e4313070e33de7e",
+                "operationId": "6b993e4553a4509fecd4bdf1fe708bd6",
                 "parameters": [
                     {
                         "name": "page",
@@ -29,6 +29,16 @@
                         "schema": {
                             "type": "integer",
                             "default": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
                         }
                     }
                 ],
@@ -73,7 +83,7 @@
                 ],
                 "summary": "Create a new shipment and purchase USPS label",
                 "description": "Store a newly created shipment in storage.",
-                "operationId": "cd145d82283d16227bdcce15fbc97e00",
+                "operationId": "6d041ec83584421fed9d5199bc0eaf38",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -193,7 +203,16 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Shipment"
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Shipment"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Shipment created successfully"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
@@ -212,14 +231,14 @@
                 ]
             }
         },
-        "/shipments/{id}": {
+        "/api/shipments/{id}": {
             "get": {
                 "tags": [
                     "Shipments"
                 ],
                 "summary": "Get shipment details",
                 "description": "Display the specified shipment.",
-                "operationId": "9d90a528992d8f6c89bf66a32833d085",
+                "operationId": "69260af76e2b901a793fb2cdc4ed5405",
                 "parameters": [
                     {
                         "name": "id",
@@ -237,7 +256,12 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Shipment"
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Shipment"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
@@ -264,7 +288,7 @@
                 ],
                 "summary": "Delete a shipment",
                 "description": "Remove the specified shipment from storage (soft delete).",
-                "operationId": "c34d6b7c68fd0f15c190331662a5d308",
+                "operationId": "8772a5e188e1d65bcca8acb84eec2351",
                 "parameters": [
                     {
                         "name": "id",
@@ -277,8 +301,21 @@
                     }
                 ],
                 "responses": {
-                    "204": {
-                        "description": "Shipment deleted successfully"
+                    "200": {
+                        "description": "Shipment deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Shipment deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "Unauthenticated"

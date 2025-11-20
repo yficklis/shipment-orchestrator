@@ -138,4 +138,3 @@ class ShipmentTest extends TestCase
         $this->assertEquals('5.99', $shipment->rate_amount);
     }
 }
-

@@ -13,7 +13,7 @@ class UpdateShipmentRequest extends FormRequest
     {
         // Check if the shipment belongs to the authenticated user
         $shipment = $this->route('shipment');
-        
+
         return $shipment && $shipment->user_id === $this->user()->id;
     }
 

@@ -85,4 +85,3 @@ interface ShipmentRepositoryInterface
      */
     public function getRecentByUser(int $userId, int $limit = 10): Collection;
 }
-

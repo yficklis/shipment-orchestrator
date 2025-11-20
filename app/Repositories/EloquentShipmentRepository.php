@@ -14,7 +14,8 @@ class EloquentShipmentRepository implements ShipmentRepositoryInterface
      */
     public function __construct(
         protected Shipment $model
-    ) {}
+    ) {
+    }
 
     /**
      * Get all shipments for a specific user with pagination.
@@ -91,11 +92,11 @@ class EloquentShipmentRepository implements ShipmentRepositoryInterface
     public function update(int $id, array $data): bool
     {
         $shipment = $this->find($id);
-        
+
         if (!$shipment) {
             return false;
         }
-        
+
         return $shipment->update($data);
     }
 
@@ -108,11 +109,11 @@ class EloquentShipmentRepository implements ShipmentRepositoryInterface
     public function delete(int $id): bool
     {
         $shipment = $this->find($id);
-        
+
         if (!$shipment) {
             return false;
         }
-        
+
         return $shipment->delete();
     }
 
@@ -148,4 +149,3 @@ class EloquentShipmentRepository implements ShipmentRepositoryInterface
             ->get();
     }
 }
-

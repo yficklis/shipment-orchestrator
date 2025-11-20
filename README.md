@@ -292,14 +292,82 @@ The documentation includes:
 php artisan l5-swagger:generate
 ```
 
-### Endpoints Overview
+### API Endpoints
 
-- `GET /shipments` - List user's shipments
-- `POST /shipments` - Create new shipment and purchase label
-- `GET /shipments/{id}` - Get shipment details
-- `DELETE /shipments/{id}` - Delete shipment (soft delete)
+This project provides two sets of endpoints:
 
-All endpoints require authentication and automatically enforce user ownership.
+#### Web Routes (Inertia/Vue SPA)
+- `GET /shipments` - Shipments list page (Inertia)
+- `POST /shipments` - Create shipment (Inertia)
+- `GET /shipments/{id}` - Shipment details page (Inertia)
+- `DELETE /shipments/{id}` - Delete shipment (Inertia)
+
+#### REST API Routes (JSON responses)
+- `GET /api/shipments` - List user's shipments (JSON)
+- `POST /api/shipments` - Create new shipment (JSON)
+- `GET /api/shipments/{id}` - Get shipment details (JSON)
+- `DELETE /api/shipments/{id}` - Delete shipment (JSON)
+- `GET /api/user` - Get authenticated user info (JSON)
+
+All API endpoints require Sanctum authentication and automatically enforce user ownership.
+
+### 🎯 Como Usar a API
+
+The REST API uses Laravel Sanctum for authentication.
+
+#### 1. Gerar Token (via Tinker)
+
+```bash
+./vendor/bin/sail artisan tinker
+```
+
+Dentro do Tinker:
+```php
+$user = User::find(1);  // ou use seu ID de usuário
+$token = $user->createToken('api-token')->plainTextToken;
+echo $token;  // Copie este token
+```
+
+#### 2. Fazer Requests
+
+**Listar Shipments:**
+```bash
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+     -H "Accept: application/json" \
+     http://localhost/api/shipments
+```
+
+**Criar Shipment:**
+```bash
+curl -X POST http://localhost/api/shipments \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
+  -d '{
+    "from_name": "John Doe",
+    "from_street1": "123 Main St",
+    "from_city": "San Francisco",
+    "from_state": "CA",
+    "from_zip": "94105",
+    "to_name": "Jane Smith",
+    "to_street1": "456 Oak Ave",
+    "to_city": "New York",
+    "to_state": "NY",
+    "to_zip": "10001",
+    "weight": 16.0
+  }'
+```
+
+#### 3. Ver Documentação Interativa
+
+Acesse o Swagger UI em:
+```
+http://localhost/api/documentation
+```
+
+**Dica**: Clique em "Authorize" no Swagger e cole seu token Bearer para testar os endpoints interativamente.
+
+Para documentação completa da API, consulte: [`API_DOCUMENTATION.md`](API_DOCUMENTATION.md)
 
 ## Testing
 
@@ -326,7 +394,8 @@ make test
   - `tests/Unit/Repositories/ShipmentRepositoryTest.php` - Repository methods
 
 - **Feature Tests**:
-  - `tests/Feature/ShipmentControllerTest.php` - Controller endpoints
+  - `tests/Feature/ShipmentControllerTest.php` - Web controller endpoints
+  - `tests/Feature/Api/ShipmentApiTest.php` - REST API endpoints
   - Authentication tests (Breeze default)
 
 ## Assumptions

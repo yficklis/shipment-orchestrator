@@ -9,7 +9,8 @@ class AddressValidationService
      */
     public function __construct(
         protected EasyPostService $easyPostService
-    ) {}
+    ) {
+    }
 
     /**
      * Validate a US address.
@@ -99,8 +100,8 @@ class AddressValidationService
             $parts[] = $addressData['street2'];
         }
 
-        $parts[] = ($addressData['city'] ?? '') . ', ' . 
-                   ($addressData['state'] ?? '') . ' ' . 
+        $parts[] = ($addressData['city'] ?? '') . ', ' .
+                   ($addressData['state'] ?? '') . ' ' .
                    ($addressData['zip'] ?? '');
 
         return implode("\n", array_filter($parts));
@@ -118,4 +119,3 @@ class AddressValidationService
         return strtoupper($country) === 'US';
     }
 }
-

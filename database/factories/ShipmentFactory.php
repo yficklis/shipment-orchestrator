@@ -18,14 +18,14 @@ class ShipmentFactory extends Factory
     public function definition(): array
     {
         $states = ['CA', 'NY', 'TX', 'FL', 'IL', 'PA', 'OH', 'GA', 'NC', 'MI'];
-        
+
         return [
             'user_id' => User::factory(),
             'tracking_code' => fake()->optional()->regexify('[A-Z0-9]{20}'),
             'carrier' => 'USPS',
             'easypost_shipment_id' => fake()->optional()->regexify('shp_[a-z0-9]{24}'),
             'status' => fake()->randomElement(['created', 'purchased', 'voided']),
-            
+
             // From address
             'from_name' => fake()->name(),
             'from_street1' => fake()->streetAddress(),
@@ -36,7 +36,7 @@ class ShipmentFactory extends Factory
             'from_country' => 'US',
             'from_phone' => fake()->optional()->phoneNumber(),
             'from_email' => fake()->optional()->safeEmail(),
-            
+
             // To address
             'to_name' => fake()->name(),
             'to_street1' => fake()->streetAddress(),
@@ -47,13 +47,13 @@ class ShipmentFactory extends Factory
             'to_country' => 'US',
             'to_phone' => fake()->optional()->phoneNumber(),
             'to_email' => fake()->optional()->safeEmail(),
-            
+
             // Package details
             'weight' => fake()->randomFloat(2, 1, 50), // 1-50 oz
             'length' => fake()->randomFloat(2, 5, 20), // 5-20 inches
             'width' => fake()->randomFloat(2, 5, 15), // 5-15 inches
             'height' => fake()->randomFloat(2, 1, 10), // 1-10 inches
-            
+
             // Label information
             'label_url' => fake()->optional()->url(),
             'tracking_url' => fake()->optional()->url(),

@@ -14,13 +14,13 @@ return new class extends Migration
         Schema::create('shipments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            
+
             // Shipment tracking
             $table->string('tracking_code')->nullable();
             $table->string('carrier')->default('USPS');
             $table->string('easypost_shipment_id')->nullable();
             $table->enum('status', ['created', 'purchased', 'voided'])->default('created');
-            
+
             // From address
             $table->string('from_name');
             $table->string('from_street1');
@@ -31,7 +31,7 @@ return new class extends Migration
             $table->string('from_country', 2)->default('US');
             $table->string('from_phone')->nullable();
             $table->string('from_email')->nullable();
-            
+
             // To address
             $table->string('to_name');
             $table->string('to_street1');
@@ -42,22 +42,22 @@ return new class extends Migration
             $table->string('to_country', 2)->default('US');
             $table->string('to_phone')->nullable();
             $table->string('to_email')->nullable();
-            
+
             // Package details
             $table->decimal('weight', 8, 2); // in ounces
             $table->decimal('length', 8, 2)->nullable(); // in inches
             $table->decimal('width', 8, 2)->nullable(); // in inches
             $table->decimal('height', 8, 2)->nullable(); // in inches
-            
+
             // Label information
             $table->string('label_url')->nullable();
             $table->string('tracking_url')->nullable();
             $table->string('postage_label_url')->nullable();
             $table->decimal('rate_amount', 10, 2)->nullable();
-            
+
             $table->timestamps();
             $table->softDeletes();
-            
+
             // Indexes
             $table->index('user_id');
             $table->index('tracking_code');

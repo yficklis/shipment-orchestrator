@@ -38,11 +38,10 @@ class ShipmentControllerTest extends TestCase
 
         $response = $this->actingAs($user)->get(route('shipments.index'));
 
-        $response->assertInertia(fn ($page) => 
+        $response->assertInertia(fn ($page) =>
             $page->component('Shipments/Index')
                 ->has('shipments.data', 1)
-                ->where('shipments.data.0.id', $userShipment->id)
-        );
+                ->where('shipments.data.0.id', $userShipment->id));
     }
 
     public function test_authenticated_user_can_view_create_page(): void
@@ -63,10 +62,9 @@ class ShipmentControllerTest extends TestCase
         $response = $this->actingAs($user)->get(route('shipments.show', $shipment));
 
         $response->assertStatus(200);
-        $response->assertInertia(fn ($page) => 
+        $response->assertInertia(fn ($page) =>
             $page->component('Shipments/Show')
-                ->where('shipment.id', $shipment->id)
-        );
+                ->where('shipment.id', $shipment->id));
     }
 
     public function test_user_cannot_view_other_users_shipment(): void
@@ -170,4 +168,3 @@ class ShipmentControllerTest extends TestCase
         $response->assertSessionHasErrors(['weight']);
     }
 }
-

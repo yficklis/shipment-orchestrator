@@ -32,7 +32,7 @@ class CreateShipmentRequest extends FormRequest
             'from_country' => ['sometimes', 'string', 'in:US'],
             'from_phone' => ['nullable', 'string', 'max:20'],
             'from_email' => ['nullable', 'email', 'max:255'],
-            
+
             // To address
             'to_name' => ['required', 'string', 'max:255'],
             'to_street1' => ['required', 'string', 'max:255'],
@@ -43,7 +43,7 @@ class CreateShipmentRequest extends FormRequest
             'to_country' => ['sometimes', 'string', 'in:US'],
             'to_phone' => ['nullable', 'string', 'max:20'],
             'to_email' => ['nullable', 'email', 'max:255'],
-            
+
             // Package details
             'weight' => ['required', 'numeric', 'min:0.1', 'max:150'], // ounces
             'length' => ['nullable', 'numeric', 'min:0.1', 'max:100'], // inches
