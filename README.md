@@ -2,6 +2,8 @@
 
 A full-stack web application for generating, storing, and managing USPS shipping labels using the EasyPost API. Built with Laravel 12, Vue 3, and Inertia.js.
 
+> **Note**: Although the challenge expects a lightweight prototype (5-hour timeframe), this implementation includes additional architectural patterns (Repository Pattern, Service Layer, REST API) and comprehensive testing to demonstrate production-ready practices and attention to code quality.
+
 ## Table of Contents
 
 - [Tech Stack](#tech-stack)
@@ -81,6 +83,8 @@ A full-stack web application for generating, storing, and managing USPS shipping
    EASYPOST_API_KEY=your_api_key_here
    EASYPOST_TEST_MODE=true
    ```
+   
+   > **Important**: This application uses EasyPost's test mode. All labels generated are test labels and **no charges will be applied** to your account.
 
 4. **Start development server**:
    ```bash
@@ -281,21 +285,16 @@ Configuration is in `phpcs.xml` with:
 
 ### Swagger/OpenAPI
 
-The API is fully documented using Swagger/OpenAPI specification. Access the interactive documentation at:
+This project is primarily an Inertia.js/Vue SPA, but also includes a REST API layer for demonstration purposes. The API is documented using Swagger/OpenAPI:
 
 ```
 http://localhost/api/documentation
 ```
 
-The documentation includes:
-- All available endpoints (shipments CRUD)
-- Request/response schemas
-- Authentication requirements
-- Example requests and responses
-
-### Generate Documentation
-
+**Generate/Update Documentation:**
 ```bash
+make swagger
+# Or
 php artisan l5-swagger:generate
 ```
 
@@ -422,7 +421,7 @@ make test
 ### Project Scope
 1. **USPS Only**: Only USPS carrier is supported as per requirements
 2. **US Addresses**: Only United States addresses are accepted
-3. **Test Mode**: Application uses EasyPost test mode (no real charges)
+3. **Test Mode**: Application uses EasyPost test mode - **all labels generated are test labels (no charges applied)**
 4. **Immediate Purchase**: Shipments are created and purchased in one step
 5. **No Editing**: Shipments cannot be edited after creation
 6. **URL Storage**: Label URLs are stored in database (EasyPost keeps them for 90 days)
