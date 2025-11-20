@@ -139,6 +139,10 @@ EASYPOST_TEST_MODE=true
 
 ```bash
 ./vendor/bin/sail artisan key:generate
+
+# Publish Sanctum migrations (required for API authentication)
+./vendor/bin/sail artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+
 ./vendor/bin/sail artisan migrate
 ```
 
@@ -179,6 +183,9 @@ make up            # Start containers
 make down          # Stop containers
 make test          # Run tests
 make migrate       # Run migrations
+make sanctum       # Publish Sanctum migrations
+make swagger       # Generate Swagger documentation
+make token         # Generate API token for first user
 make shell         # Access container shell
 make logs          # View logs
 ```
@@ -311,33 +318,45 @@ This project provides two sets of endpoints:
 
 All API endpoints require Sanctum authentication and automatically enforce user ownership.
 
-### 🎯 Como Usar a API
+### API Authentication
 
 The REST API uses Laravel Sanctum for authentication.
 
-#### 1. Gerar Token (via Tinker)
+**Important**: Make sure you've published Sanctum migrations before using the API:
+```bash
+./vendor/bin/sail artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+./vendor/bin/sail artisan migrate
+```
 
+#### 1. Generate API Token
+
+**Option A: Using Make command (quick)**
+```bash
+make token
+```
+
+**Option B: Using Tinker (manual)**
 ```bash
 ./vendor/bin/sail artisan tinker
 ```
 
-Dentro do Tinker:
+Inside Tinker:
 ```php
-$user = User::find(1);  // ou use seu ID de usuário
+$user = User::find(1);  // or use your user ID
 $token = $user->createToken('api-token')->plainTextToken;
-echo $token;  // Copie este token
+echo $token;  // Copy this token
 ```
 
-#### 2. Fazer Requests
+#### 2. Making API Requests
 
-**Listar Shipments:**
+**List Shipments:**
 ```bash
 curl -H "Authorization: Bearer YOUR_TOKEN" \
      -H "Accept: application/json" \
      http://localhost/api/shipments
 ```
 
-**Criar Shipment:**
+**Create Shipment:**
 ```bash
 curl -X POST http://localhost/api/shipments \
   -H "Authorization: Bearer YOUR_TOKEN" \
@@ -358,16 +377,16 @@ curl -X POST http://localhost/api/shipments \
   }'
 ```
 
-#### 3. Ver Documentação Interativa
+#### 3. Interactive Documentation
 
-Acesse o Swagger UI em:
+Access Swagger UI at:
 ```
 http://localhost/api/documentation
 ```
 
-**Dica**: Clique em "Authorize" no Swagger e cole seu token Bearer para testar os endpoints interativamente.
+**Tip**: Click "Authorize" in Swagger and paste your Bearer token to test endpoints interactively.
 
-Para documentação completa da API, consulte: [`API_DOCUMENTATION.md`](API_DOCUMENTATION.md)
+For complete API documentation, see: [`API_DOCUMENTATION.md`](API_DOCUMENTATION.md)
 
 ## Testing
 

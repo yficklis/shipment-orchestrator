@@ -87,3 +87,12 @@ queue: ## Start queue worker
 tinker: ## Open Laravel Tinker
 	./vendor/bin/sail artisan tinker
 
+swagger: ## Generate Swagger documentation
+	./vendor/bin/sail artisan l5-swagger:generate
+
+sanctum: ## Publish Sanctum migrations
+	./vendor/bin/sail artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+
+token: ## Generate API token for first user (use: make token)
+	@./vendor/bin/sail artisan tinker --execute="\$$user = User::first(); if(\$$user) { \$$token = \$$user->createToken('api-token')->plainTextToken; echo 'Token: ' . \$$token . PHP_EOL; } else { echo 'No users found. Create a user first.' . PHP_EOL; }"
+

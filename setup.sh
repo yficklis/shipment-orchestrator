@@ -66,6 +66,11 @@ print_message "Generating application key..."
 ./vendor/bin/sail artisan key:generate
 print_success "Application key generated"
 
+# Publish Sanctum migrations
+print_message "Publishing Sanctum migrations..."
+./vendor/bin/sail artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider" --force
+print_success "Sanctum migrations published"
+
 # Run migrations
 print_message "Running database migrations..."
 ./vendor/bin/sail artisan migrate --force
