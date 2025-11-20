@@ -13,12 +13,15 @@ const props = defineProps({
     },
 });
 
+// Extract shipment data from resource wrapper
+const shipmentData = props.shipment.data || props.shipment;
+
 const showDeleteConfirm = ref(false);
 const deleting = ref(false);
 
 const deleteShipment = () => {
     deleting.value = true;
-    router.delete(route('shipments.destroy', props.shipment.id), {
+    router.delete(route('shipments.destroy', shipmentData.id), {
         onFinish: () => {
             deleting.value = false;
             showDeleteConfirm.value = false;
@@ -28,7 +31,7 @@ const deleteShipment = () => {
 </script>
 
 <template>
-    <Head :title="`Shipment ${shipment.tracking_code || shipment.id}`" />
+    <Head :title="`Shipment ${shipmentData.tracking_code || shipmentData.id}`" />
 
     <AuthenticatedLayout>
         <template #header>
@@ -101,7 +104,7 @@ const deleteShipment = () => {
                 </div>
 
                 <!-- Label Preview -->
-                <LabelPreview :shipment="shipment" />
+                <LabelPreview :shipment="shipmentData" />
 
                 <!-- Timeline -->
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
@@ -129,7 +132,7 @@ const deleteShipment = () => {
                                                 </p>
                                             </div>
                                             <div class="whitespace-nowrap text-right text-sm text-gray-500 dark:text-gray-400">
-                                                {{ new Date(shipment.created_at).toLocaleString() }}
+                                                {{ new Date(shipmentData.created_at).toLocaleString() }}
                                             </div>
                                         </div>
                                     </div>
@@ -151,16 +154,16 @@ const deleteShipment = () => {
                                 Shipment ID
                             </dt>
                             <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100 font-mono">
-                                {{ shipment.id }}
+                                {{ shipmentData.id }}
                             </dd>
                         </div>
                         
-                        <div v-if="shipment.easypost_shipment_id">
+                        <div v-if="shipmentData.easypost_shipment_id">
                             <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
                                 EasyPost ID
                             </dt>
                             <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100 font-mono">
-                                {{ shipment.easypost_shipment_id }}
+                                {{ shipmentData.easypost_shipment_id }}
                             </dd>
                         </div>
                         
@@ -169,7 +172,7 @@ const deleteShipment = () => {
                                 Created
                             </dt>
                             <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">
-                                {{ new Date(shipment.created_at).toLocaleString() }}
+                                {{ new Date(shipmentData.created_at).toLocaleString() }}
                             </dd>
                         </div>
                         
@@ -178,7 +181,7 @@ const deleteShipment = () => {
                                 Last Updated
                             </dt>
                             <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100">
-                                {{ new Date(shipment.updated_at).toLocaleString() }}
+                                {{ new Date(shipmentData.updated_at).toLocaleString() }}
                             </dd>
                         </div>
                     </dl>

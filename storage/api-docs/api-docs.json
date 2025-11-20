@@ -1,0 +1,490 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Shipment Orchestrator API",
+        "description": "API for managing USPS shipping labels via EasyPost",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost",
+            "description": "Local development server"
+        }
+    ],
+    "paths": {
+        "/shipments": {
+            "get": {
+                "tags": [
+                    "Shipments"
+                ],
+                "summary": "List user's shipments",
+                "description": "Display a listing of the user's shipments.",
+                "operationId": "770f834dedbd56710e4313070e33de7e",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Shipment"
+                                            }
+                                        },
+                                        "links": {
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Shipments"
+                ],
+                "summary": "Create a new shipment and purchase USPS label",
+                "description": "Store a newly created shipment in storage.",
+                "operationId": "cd145d82283d16227bdcce15fbc97e00",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "from_name",
+                                    "from_street1",
+                                    "from_city",
+                                    "from_state",
+                                    "from_zip",
+                                    "to_name",
+                                    "to_street1",
+                                    "to_city",
+                                    "to_state",
+                                    "to_zip",
+                                    "weight"
+                                ],
+                                "properties": {
+                                    "from_name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "from_street1": {
+                                        "type": "string",
+                                        "example": "123 Main St"
+                                    },
+                                    "from_street2": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "from_city": {
+                                        "type": "string",
+                                        "example": "San Francisco"
+                                    },
+                                    "from_state": {
+                                        "type": "string",
+                                        "example": "CA"
+                                    },
+                                    "from_zip": {
+                                        "type": "string",
+                                        "example": "94105"
+                                    },
+                                    "from_phone": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "from_email": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "to_name": {
+                                        "type": "string",
+                                        "example": "Jane Smith"
+                                    },
+                                    "to_street1": {
+                                        "type": "string",
+                                        "example": "456 Oak Ave"
+                                    },
+                                    "to_street2": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "to_city": {
+                                        "type": "string",
+                                        "example": "New York"
+                                    },
+                                    "to_state": {
+                                        "type": "string",
+                                        "example": "NY"
+                                    },
+                                    "to_zip": {
+                                        "type": "string",
+                                        "example": "10001"
+                                    },
+                                    "to_phone": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "to_email": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "weight": {
+                                        "description": "Weight in ounces",
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 16
+                                    },
+                                    "length": {
+                                        "description": "Length in inches",
+                                        "type": "number",
+                                        "format": "float",
+                                        "nullable": true
+                                    },
+                                    "width": {
+                                        "description": "Width in inches",
+                                        "type": "number",
+                                        "format": "float",
+                                        "nullable": true
+                                    },
+                                    "height": {
+                                        "description": "Height in inches",
+                                        "type": "number",
+                                        "format": "float",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Shipment created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Shipment"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/shipments/{id}": {
+            "get": {
+                "tags": [
+                    "Shipments"
+                ],
+                "summary": "Get shipment details",
+                "description": "Display the specified shipment.",
+                "operationId": "9d90a528992d8f6c89bf66a32833d085",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Shipment ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Shipment"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden - Not your shipment"
+                    },
+                    "404": {
+                        "description": "Shipment not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Shipments"
+                ],
+                "summary": "Delete a shipment",
+                "description": "Remove the specified shipment from storage (soft delete).",
+                "operationId": "c34d6b7c68fd0f15c190331662a5d308",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Shipment ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Shipment deleted successfully"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden - Not your shipment"
+                    },
+                    "404": {
+                        "description": "Shipment not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Shipment": {
+                "title": "Shipment",
+                "description": "Shipment model representing a USPS shipping label",
+                "required": [
+                    "id",
+                    "user_id",
+                    "tracking_code",
+                    "carrier",
+                    "status"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "tracking_code": {
+                        "type": "string",
+                        "example": "9400111899562537624127"
+                    },
+                    "carrier": {
+                        "type": "string",
+                        "example": "USPS"
+                    },
+                    "easypost_shipment_id": {
+                        "type": "string",
+                        "example": "shp_abc123"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "created",
+                            "purchased",
+                            "voided"
+                        ],
+                        "example": "purchased"
+                    },
+                    "from_name": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "from_street1": {
+                        "type": "string",
+                        "example": "123 Main St"
+                    },
+                    "from_street2": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "from_city": {
+                        "type": "string",
+                        "example": "San Francisco"
+                    },
+                    "from_state": {
+                        "type": "string",
+                        "example": "CA"
+                    },
+                    "from_zip": {
+                        "type": "string",
+                        "example": "94105"
+                    },
+                    "from_country": {
+                        "type": "string",
+                        "example": "US"
+                    },
+                    "from_phone": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "from_email": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "to_name": {
+                        "type": "string",
+                        "example": "Jane Smith"
+                    },
+                    "to_street1": {
+                        "type": "string",
+                        "example": "456 Oak Ave"
+                    },
+                    "to_street2": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "to_city": {
+                        "type": "string",
+                        "example": "New York"
+                    },
+                    "to_state": {
+                        "type": "string",
+                        "example": "NY"
+                    },
+                    "to_zip": {
+                        "type": "string",
+                        "example": "10001"
+                    },
+                    "to_country": {
+                        "type": "string",
+                        "example": "US"
+                    },
+                    "to_phone": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "to_email": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "weight": {
+                        "description": "Weight in ounces",
+                        "type": "number",
+                        "format": "float",
+                        "example": 16
+                    },
+                    "length": {
+                        "description": "Length in inches",
+                        "type": "number",
+                        "format": "float",
+                        "nullable": true
+                    },
+                    "width": {
+                        "description": "Width in inches",
+                        "type": "number",
+                        "format": "float",
+                        "nullable": true
+                    },
+                    "height": {
+                        "description": "Height in inches",
+                        "type": "number",
+                        "format": "float",
+                        "nullable": true
+                    },
+                    "label_url": {
+                        "type": "string",
+                        "format": "url",
+                        "example": "https://easypost-files.s3.amazonaws.com/..."
+                    },
+                    "tracking_url": {
+                        "type": "string",
+                        "format": "url",
+                        "nullable": true
+                    },
+                    "postage_label_url": {
+                        "type": "string",
+                        "format": "url",
+                        "nullable": true
+                    },
+                    "rate_amount": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 7.33
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "deleted_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Shipments",
+            "description": "Shipments"
+        }
+    ]
+}

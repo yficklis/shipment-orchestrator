@@ -247,6 +247,60 @@ resources/js/
 - Status tracking (created, purchased, voided)
 - Soft deletes
 
+## Code Quality
+
+### PHP Code Sniffer (PSR-12)
+
+This project follows PSR-12 coding standards. You can check and fix code style using:
+
+```bash
+# Check code style
+make phpcs
+# Or
+./vendor/bin/sail php vendor/bin/phpcs
+
+# Fix code style automatically
+make phpcbf
+# Or
+./vendor/bin/sail php vendor/bin/phpcbf
+```
+
+Configuration is in `phpcs.xml` with:
+- PSR-12 standard
+- Line length limit: 120 characters
+- Exclusions: vendor, storage, bootstrap/cache, blade files
+
+## API Documentation
+
+### Swagger/OpenAPI
+
+The API is fully documented using Swagger/OpenAPI specification. Access the interactive documentation at:
+
+```
+http://localhost/api/documentation
+```
+
+The documentation includes:
+- All available endpoints (shipments CRUD)
+- Request/response schemas
+- Authentication requirements
+- Example requests and responses
+
+### Generate Documentation
+
+```bash
+php artisan l5-swagger:generate
+```
+
+### Endpoints Overview
+
+- `GET /shipments` - List user's shipments
+- `POST /shipments` - Create new shipment and purchase label
+- `GET /shipments/{id}` - Get shipment details
+- `DELETE /shipments/{id}` - Delete shipment (soft delete)
+
+All endpoints require authentication and automatically enforce user ownership.
+
 ## Testing
 
 ### Run All Tests
@@ -256,6 +310,8 @@ resources/js/
 # Or
 make test
 ```
+
+**Note**: Tests require Docker/Sail to be running as they need database connection.
 
 ### Test Coverage
 

@@ -60,6 +60,12 @@ build: ## Build frontend assets for production
 pint: ## Run Laravel Pint (code style fixer)
 	./vendor/bin/sail pint
 
+phpcs: ## Check code style with PHPCS (PSR-12)
+	./vendor/bin/sail php vendor/bin/phpcs
+
+phpcbf: ## Fix code style automatically with PHPCBF
+	./vendor/bin/sail php vendor/bin/phpcbf
+
 logs: ## Show container logs
 	./vendor/bin/sail logs -f
 

@@ -6,7 +6,51 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OpenApi\Attributes as OA;
 
+#[OA\Schema(
+    schema: "Shipment",
+    title: "Shipment",
+    description: "Shipment model representing a USPS shipping label",
+    required: ["id", "user_id", "tracking_code", "carrier", "status"],
+    properties: [
+        new OA\Property(property: "id", type: "integer", example: 1),
+        new OA\Property(property: "user_id", type: "integer", example: 1),
+        new OA\Property(property: "tracking_code", type: "string", example: "9400111899562537624127"),
+        new OA\Property(property: "carrier", type: "string", example: "USPS"),
+        new OA\Property(property: "easypost_shipment_id", type: "string", example: "shp_abc123"),
+        new OA\Property(property: "status", type: "string", enum: ["created", "purchased", "voided"], example: "purchased"),
+        new OA\Property(property: "from_name", type: "string", example: "John Doe"),
+        new OA\Property(property: "from_street1", type: "string", example: "123 Main St"),
+        new OA\Property(property: "from_street2", type: "string", nullable: true),
+        new OA\Property(property: "from_city", type: "string", example: "San Francisco"),
+        new OA\Property(property: "from_state", type: "string", example: "CA"),
+        new OA\Property(property: "from_zip", type: "string", example: "94105"),
+        new OA\Property(property: "from_country", type: "string", example: "US"),
+        new OA\Property(property: "from_phone", type: "string", nullable: true),
+        new OA\Property(property: "from_email", type: "string", nullable: true),
+        new OA\Property(property: "to_name", type: "string", example: "Jane Smith"),
+        new OA\Property(property: "to_street1", type: "string", example: "456 Oak Ave"),
+        new OA\Property(property: "to_street2", type: "string", nullable: true),
+        new OA\Property(property: "to_city", type: "string", example: "New York"),
+        new OA\Property(property: "to_state", type: "string", example: "NY"),
+        new OA\Property(property: "to_zip", type: "string", example: "10001"),
+        new OA\Property(property: "to_country", type: "string", example: "US"),
+        new OA\Property(property: "to_phone", type: "string", nullable: true),
+        new OA\Property(property: "to_email", type: "string", nullable: true),
+        new OA\Property(property: "weight", type: "number", format: "float", example: 16.0, description: "Weight in ounces"),
+        new OA\Property(property: "length", type: "number", format: "float", nullable: true, description: "Length in inches"),
+        new OA\Property(property: "width", type: "number", format: "float", nullable: true, description: "Width in inches"),
+        new OA\Property(property: "height", type: "number", format: "float", nullable: true, description: "Height in inches"),
+        new OA\Property(property: "label_url", type: "string", format: "url", example: "https://easypost-files.s3.amazonaws.com/..."),
+        new OA\Property(property: "tracking_url", type: "string", format: "url", nullable: true),
+        new OA\Property(property: "postage_label_url", type: "string", format: "url", nullable: true),
+        new OA\Property(property: "rate_amount", type: "number", format: "float", example: 7.33),
+        new OA\Property(property: "created_at", type: "string", format: "date-time"),
+        new OA\Property(property: "updated_at", type: "string", format: "date-time"),
+        new OA\Property(property: "deleted_at", type: "string", format: "date-time", nullable: true)
+    ]
+)]
 class Shipment extends Model
 {
     use HasFactory, SoftDeletes;
