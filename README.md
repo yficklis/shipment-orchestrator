@@ -1,32 +1,58 @@
 # Shipment Orchestrator
 
-A web application to generate, view, and store USPS shipping labels using the EasyPost API.
+A full-stack web application for generating, storing, and managing USPS shipping labels using the EasyPost API. Built with Laravel 12, Vue 3, and Inertia.js.
+
+## Table of Contents
+
+- [Tech Stack](#tech-stack)
+- [Features](#features)
+- [Quick Start](#quick-start)
+- [Manual Setup](#manual-setup)
+- [Usage](#usage)
+- [Architecture](#architecture)
+- [Testing](#testing)
+- [Assumptions](#assumptions)
+- [What I'd Do Next](#what-id-do-next)
+- [Troubleshooting](#troubleshooting)
 
 ## Tech Stack
 
-- **Backend**: Laravel 12 (PHP 8.2+) with Laravel Breeze
+- **Backend**: Laravel 12 (PHP 8.2+)
 - **Frontend**: Vue 3 + Inertia.js + Tailwind CSS
 - **Database**: MySQL
 - **Environment**: Laravel Sail (Docker)
-- **External API**: EasyPost API
+- **External API**: [EasyPost API](https://www.easypost.com/)
+- **Authentication**: Laravel Breeze
 
 ## Features
 
+### Core Functionality
 - User authentication and authorization
-- Generate USPS shipping labels via EasyPost API
-- Store and view shipping label history
-- Address validation for US addresses
-- Print-ready label generation
-- User-specific label management
+- Create and purchase USPS shipping labels
+- Address validation via EasyPost API
+- View shipping label history (user-specific)
+- Print-ready labels (PDF format)
+- Tracking information access
+- Soft delete for shipment records
+
+### Technical Features
+- Repository Pattern for data abstraction
+- Service Layer for business logic
+- Middleware for ownership verification
+- Comprehensive form validation
+- Unit and feature tests
+- Responsive UI with custom color palette
+- Real-time form feedback
+- Automated setup scripts
 
 ## Quick Start
 
 ### Prerequisites
 
-- Docker and Docker Compose
+- Docker Desktop installed and running
 - Git
 
-### Installation
+### Automated Setup
 
 1. **Clone the repository**:
    ```bash
@@ -34,54 +60,340 @@ A web application to generate, view, and store USPS shipping labels using the Ea
    cd shipment-orchestrator
    ```
 
-2. **Configure environment**:
+2. **Run the setup script**:
    ```bash
-   cp .env.example .env
+   ./setup.sh
    ```
+
+   This script will:
+   - Create `.env` file from `.env.example`
+   - Start Docker containers
+   - Generate application key
+   - Run database migrations
+   - Install NPM dependencies
+   - Build frontend assets
+   - Clear caches
+
+3. **Configure EasyPost API**:
    
-   Update your `.env` file with your EasyPost API key:
+   Edit `.env` and add your EasyPost API key:
    ```
    EASYPOST_API_KEY=your_api_key_here
    EASYPOST_TEST_MODE=true
    ```
 
-3. **Start Laravel Sail**:
-   ```bash
-   ./vendor/bin/sail up -d
-   ```
-
-4. **Install dependencies**:
-   ```bash
-   ./vendor/bin/sail composer install
-   ./vendor/bin/sail npm install --legacy-peer-deps
-   ```
-
-5. **Run migrations**:
-   ```bash
-   ./vendor/bin/sail artisan migrate
-   ```
-
-6. **Build frontend assets**:
+4. **Start development server**:
    ```bash
    ./vendor/bin/sail npm run dev
+   # Or using Make
+   make dev
    ```
 
-7. **Access the application**:
-   - Frontend: http://localhost
-   - API: http://localhost/api
+5. **Access the application**:
+   - URL: http://localhost
+   - Register a new account
+   - Start creating shipments!
 
-## Development
+## Manual Setup
 
-The project follows SOLID principles and implements:
-- Repository Pattern for data abstraction
-- Service Layer for business logic
-- RESTful API design
-- Comprehensive testing coverage
+If you prefer manual setup or the script fails:
 
-## Project Status
+### 1. Clone and Configure
 
-?? Under active development
+```bash
+git clone https://github.com/yficklis/shipment-orchestrator.git
+cd shipment-orchestrator
+cp .env.example .env
+```
+
+### 2. Configure Environment
+
+Edit `.env` file:
+```env
+APP_NAME="Shipment Orchestrator"
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=shipment_orchestrator
+DB_USERNAME=sail
+DB_PASSWORD=password
+
+EASYPOST_API_KEY=your_api_key_here
+EASYPOST_TEST_MODE=true
+```
+
+### 3. Start Docker Containers
+
+```bash
+./vendor/bin/sail up -d
+```
+
+### 4. Install Dependencies
+
+```bash
+./vendor/bin/sail composer install
+./vendor/bin/sail npm install --legacy-peer-deps
+```
+
+### 5. Setup Database
+
+```bash
+./vendor/bin/sail artisan key:generate
+./vendor/bin/sail artisan migrate
+```
+
+### 6. Build Frontend
+
+```bash
+./vendor/bin/sail npm run build
+# For development with hot reload:
+./vendor/bin/sail npm run dev
+```
+
+## Usage
+
+### Creating a Shipment
+
+1. Log in to your account
+2. Click "Create Shipment" button
+3. Fill in:
+   - **From Address**: Sender information
+   - **To Address**: Recipient information (US only)
+   - **Package Details**: Weight (required), dimensions (optional)
+4. Click "Create Shipment & Purchase Label"
+5. View and print your shipping label!
+
+### Viewing Shipments
+
+- Navigate to "My Shipments" to see all your shipments
+- Click on any shipment to view details
+- Print label or track package from detail page
+
+### Using Make Commands
+
+The project includes a Makefile for convenience:
+
+```bash
+make help          # Show all available commands
+make up            # Start containers
+make down          # Stop containers
+make test          # Run tests
+make migrate       # Run migrations
+make shell         # Access container shell
+make logs          # View logs
+```
+
+## Architecture
+
+### Backend Structure
+
+```
+app/
+??? Http/
+?   ??? Controllers/
+?   ?   ??? ShipmentController.php         # Main CRUD controller
+?   ??? Middleware/
+?   ?   ??? EnsureShipmentOwner.php        # Authorization middleware
+?   ??? Requests/
+?   ?   ??? CreateShipmentRequest.php      # Validation rules
+?   ?   ??? UpdateShipmentRequest.php
+?   ??? Resources/
+?       ??? ShipmentResource.php            # API response formatting
+??? Models/
+?   ??? Shipment.php                        # Shipment model
+?   ??? User.php                            # User model
+??? Repositories/
+?   ??? Contracts/
+?   ?   ??? ShipmentRepositoryInterface.php
+?   ??? EloquentShipmentRepository.php      # Implementation
+??? Services/
+    ??? EasyPostService.php                 # EasyPost API integration
+    ??? AddressValidationService.php        # Address validation logic
+```
+
+### Frontend Structure
+
+```
+resources/js/
+??? Components/
+?   ??? Shipments/
+?       ??? AddressForm.vue                 # Reusable address input
+?       ??? PackageForm.vue                 # Package details input
+?       ??? LabelPreview.vue                # Label display
+?       ??? ShipmentCard.vue                # List item component
+??? Pages/
+    ??? Shipments/
+        ??? Index.vue                       # Shipments list
+        ??? Create.vue                      # Creation form
+        ??? Show.vue                        # Shipment details
+```
+
+### Design Patterns
+
+- **Repository Pattern**: Abstracts database queries
+- **Service Layer**: Encapsulates business logic
+- **Form Requests**: Validates incoming data
+- **API Resources**: Transforms model data
+- **Middleware**: Handles authorization
+- **Factory Pattern**: Test data generation
+
+### Database Schema
+
+**shipments** table:
+- User relationship (foreign key)
+- From/To addresses (name, street, city, state, zip, etc.)
+- Package details (weight, dimensions)
+- Label information (URLs, tracking, rate)
+- Status tracking (created, purchased, voided)
+- Soft deletes
+
+## Testing
+
+### Run All Tests
+
+```bash
+./vendor/bin/sail artisan test
+# Or
+make test
+```
+
+### Test Coverage
+
+```bash
+./vendor/bin/sail artisan test --coverage
+```
+
+### Test Structure
+
+- **Unit Tests**:
+  - `tests/Unit/Models/ShipmentTest.php` - Model behavior
+  - `tests/Unit/Repositories/ShipmentRepositoryTest.php` - Repository methods
+
+- **Feature Tests**:
+  - `tests/Feature/ShipmentControllerTest.php` - Controller endpoints
+  - Authentication tests (Breeze default)
+
+## Assumptions
+
+### Project Scope
+1. **USPS Only**: Only USPS carrier is supported as per requirements
+2. **US Addresses**: Only United States addresses are accepted
+3. **Test Mode**: Application uses EasyPost test mode (no real charges)
+4. **Immediate Purchase**: Shipments are created and purchased in one step
+5. **No Editing**: Shipments cannot be edited after creation
+6. **URL Storage**: Label URLs are stored in database (EasyPost keeps them for 90 days)
+
+### Technical Decisions
+1. **Laravel 12**: Using the latest stable version
+2. **Inertia.js**: Chosen for seamless SPA experience with Laravel
+3. **Repository Pattern**: For better testability and maintainability
+4. **Soft Deletes**: Preserves shipment history for auditing
+5. **Address Validation**: Using EasyPost's built-in validation
+6. **No Rate Shopping**: Automatically selects lowest USPS rate
+
+### Security
+1. **Ownership Verification**: Middleware ensures users can only access their own shipments
+2. **API Key Security**: EasyPost key stored in environment variables
+3. **CSRF Protection**: Laravel's built-in CSRF protection
+4. **Input Validation**: Comprehensive validation on all forms
+
+## What I'd Do Next
+
+### Short Term
+- [ ] Add rate shopping UI (show multiple carrier options)
+- [ ] Implement batch label printing
+- [ ] Add shipment search and filtering
+- [ ] Create admin dashboard for monitoring
+- [ ] Add email notifications for label creation
+
+### Medium Term
+- [ ] Implement caching for rate calculations
+- [ ] Add support for multiple carriers (FedEx, UPS)
+- [ ] Create API endpoints for third-party integrations
+- [ ] Add shipment tracking webhooks from EasyPost
+- [ ] Implement CSV export for shipment history
+
+### Long Term
+- [ ] Multi-tenant support (organizations/teams)
+- [ ] Inventory management integration
+- [ ] Custom label templates
+- [ ] Shipping rules automation
+- [ ] Analytics and reporting dashboard
+- [ ] Mobile application (React Native)
+
+### Performance Optimizations
+- [ ] Implement Redis caching
+- [ ] Add queue system for label generation
+- [ ] Optimize database queries with eager loading
+- [ ] Add CDN for static assets
+- [ ] Implement API rate limiting
+
+## Troubleshooting
+
+### Common Issues
+
+**Port Already in Use**
+```bash
+# Change ports in .env:
+APP_PORT=8000
+FORWARD_DB_PORT=33060
+```
+
+**Containers Won't Start**
+```bash
+# Reset Docker environment:
+./vendor/bin/sail down -v
+docker system prune
+./vendor/bin/sail up -d
+```
+
+**NPM Install Fails**
+```bash
+# Use legacy peer deps:
+./vendor/bin/sail npm install --legacy-peer-deps
+```
+
+**Database Connection Error**
+```bash
+# Wait for MySQL to fully start (30 seconds), then:
+./vendor/bin/sail artisan migrate
+```
+
+**Permission Issues**
+```bash
+# Fix permissions:
+chmod -R 777 storage bootstrap/cache
+```
+
+### Logs
+
+View application logs:
+```bash
+./vendor/bin/sail logs -f
+# Or specific service:
+./vendor/bin/sail logs mysql
+```
+
+### Reset Application
+
+```bash
+# Fresh database:
+./vendor/bin/sail artisan migrate:fresh
+
+# Clear all caches:
+./vendor/bin/sail artisan optimize:clear
+```
 
 ## License
 
 This project is open-sourced software licensed under the MIT license.
+
+## Author
+
+**Yficklis Santos**
+- Email: yficklis.santos@gmail.com
+- GitHub: [@yficklis](https://github.com/yficklis)
+
+---
+
+Built with Laravel 12, Vue 3, and EasyPost API
